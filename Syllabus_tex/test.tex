@@ -1,0 +1,29 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{csquotes}
+
+\RequirePackage{filecontents}
+\begin{filecontents}{refs.bib}
+@book{doe13,
+    address    = {City},
+    title      = {A nice title},
+    shorttitle = {Short title},
+    publisher  = {Publisher},
+    author     = {Doe, John},
+    year       = {2013}
+}
+\end{filecontents}
+
+\usepackage[backend=biber]{biblatex}
+\addbibresource{refs.bib}
+
+\begin{document}
+
+Hello. \cite{doe13}.
+
+\nocite{*}
+
+\printbibliography
+
+\end{document}

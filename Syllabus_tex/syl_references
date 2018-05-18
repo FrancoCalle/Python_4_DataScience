@@ -1,0 +1,30 @@
+@book{vanderplas2016python,
+  title={Python data science handbook: Essential tools for working with data},
+  author={VanderPlas, Jake},
+  year={2016},
+  publisher={" O'Reilly Media, Inc."}
+}
+
+@book{reitz2016hitchhiker,
+  title={The Hitchhiker's Guide to Python: Best Practices for Development},
+  author={Reitz, Kenneth and Schlusser, Tanya},
+  year={2016},
+  publisher={" O'Reilly Media, Inc."}
+}
+
+@book{mckinney2012python,
+  title={Python for data analysis: Data wrangling with Pandas, NumPy, and IPython},
+  author={McKinney, Wes},
+  year={2012},
+  publisher={" O'Reilly Media, Inc."}
+}
+
+@article{smedt2012pattern,
+  title={Pattern for python},
+  author={Smedt, Tom De and Daelemans, Walter},
+  journal={Journal of Machine Learning Research},
+  volume={13},
+  number={Jun},
+  pages={2063--2067},
+  year={2012}
+}
