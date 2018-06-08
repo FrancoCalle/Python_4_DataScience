@@ -16,12 +16,14 @@ df = df[['nconglome','hogar', 'vivienda', 'codperso', 'ubigeo', 'dominio', 'estr
 
 df.head()
 
+df['id_persona'] = df.ubigeo + df.nconglome + df.vivienda + df.hogar + df.codperso  #Create identifier for each individual
+df['id_persona'] = pd.Series(df['id_persona'].map(lambda x: str(x)), index = df.index)
 
-df['dpto'] = pd.Series([x[0:2] for x in df['ubigeo']], index = df1.index)       #Using List comprehension
-df['dpto'] = pd.Series(df['ubigeo'].map(lambda x: x[0:2]), index = df1.index)   #Using pandas map function
+df['dpto'] = pd.Series([x[0:2] for x in df['ubigeo']], index = df.index)            #Using List comprehension
+df['dpto'] = pd.Series(df['ubigeo'].map(lambda x: str(x[0:2])), index = df.index)        #Using pandas map function
 
-list_num = ['0'+str(x) if len(str(x)) == 1 else str(x) for x in range(26)]      #Create a list with string number for dpto
-list(np.unique(df['dpto']))
+list_num = ['0'+str(x) if len(str(x)) == 1 else str(x) for x in range(26)]          #Create a list with string number for dpto
+list_num = list(np.unique(df['dpto']))
 
 
 list_dpto = ["Amazonas", "Ancash", "Apurimac", "Arequipa",
@@ -31,132 +33,121 @@ list_dpto = ["Amazonas", "Ancash", "Apurimac", "Arequipa",
 							"Madre de Dios", "Moquegua", "Pasco", "Piura",
 							"Puno", "San Martín", "Tacna", "Tumbes", "Ucayali"]
 
+df['name_dpto'] = ''
+for i, j in zip(list_num, list_dpto):
+    df['name_dpto'][df['dpto'] == i] = j
 
 
-label 		values dpto dptol
-
-lookfor 	sexo							//Buscamos alguna variable que contenga "sexo" dentro de su descripción
-lookfor 	edad							//Buscamos alguna variable que contenga "edad" dentro de su descripción
-
-rename		p207     sexo					//Renombramos la variable "sexo"
-rename		p208a    edad					//Renombramos la variable "edad"
-rename 		p301a    niv_edu				//Renombramos el nivel de educación de la persona
-
-recode p300a (1 2 3 8= 1 "Lengua Nativa y S.M.") (4 6 7 = 0 "Castellano o L.E."), gen(lengua)
-
-label var lengua "Lengua Materna"					//Cambiamos el label de la variable para que no aparezca "recode"
-
-gen 		mujer = 1 if sexo == 2					//Generamos una variable binaria (Forma no eficiente)
-replace 	mujer = 0 if sexo == 1
-
-drop 		mujer
-
-gen 		mujer = (sexo==2) if !missing(sexo) 	//Generamos la misma variable de manera eficiente
-
-label 		define sexol 	2 "Mujer" 1 "Hombre"	//Construimos etiquetas a los valores
-
-label 		values sexo sexol						//Colocamos las etiquetas a los valores de Sexo
-
-											//Con Merge combinamos la base de datos de Educación con la de empleo
-merge 1:1 ubigeo conglome vivienda hogar codperso using "$dir1/Sesion 2/Base s2/enaho01a-2014-500.dta", keepusing(estrato p203 p204 p301a p207 p208a i524a1 d529t i530a d536 i538a1 d540t i541a d543 d544t ocu500)
-
-count if _merge==1 & edad<14
-drop  if _merge==1
-drop _merge
-
-#delimit;															//Creamos una nueva variable para los niveles de educación
-recode niv_edu 	(1/4=1 		"primaria")
-				(5=2 		"secundaria incomp")
-				(6=3 		"secundaria comp")
-				(7 9=4 		"superior incomp")
-				(8 10 11=5 	"superior comp")
-				if ocu500==1 & !missing(niv_edu),
-				gen(niv_edu_g);
-#delimit cr
-
-recode estrato (7 8 = 1 "Rural") (1/6=0 "Urbano"), gen(rural) 		//Generamos una variable que identifique a las personas que viven en áreas rurales o urbanas
-
-label var rural "Estrato Geográfico"								//Cambiamos el label de la variable para que no aparezca "recode"
-
-gen edu_prim			=(niv_edu==1 | niv_edu==2 | niv_edu==3 | niv_edu==4) 	if !missing(niv_edu)
-gen edu_sec_incomp		=(niv_edu==5) 											if !missing(niv_edu)
-gen edu_sec_comp		=(niv_edu==6) 											if !missing(niv_edu)
-gen edu_sup_incomp		=(niv_edu==7 | niv_edu==9) 								if !missing(niv_edu)
-gen edu_sup_comp		=(niv_edu==8 | niv_edu==10 | niv_edu==11) 				if !missing(niv_edu)
+np.unique(df.name_dpto)
 
 
-
-count if mujer== 1									//Contamos todas las mujeres
-count if mujer== 0									//Contamoos todos los hombres
-count if mujer==1 & niv_edu==6						//Contamos todas las mujeres que tienen secundaria completa
-count if niv_edu == .								//Contamos cuantos no reportan nivel de educación
-
-list mujer dpto niv_edu p300a edad if niv_edu==.	//Permite listar las observaciones que cumplen con niv_edu == .
-
-bys sexo: sum edad									//Utilizamos el comando bys para realizar una orden en función de las categorías
-bys sexo: sum niv_edu
-
-numlabel, add
-tabulate niv_edu_g sexo, m 							//Tabulamos con dos entradas la variable educación y sexo
-
-table niv_edu_g, contents(n edad mean edad sd edad min edad max edad) center row col 			// Creamos un cuadro de estadísticos descriptivos para la variable educación
-
-table sexo, contents(n edad mean edad sd edad min edad max edad) center row col format(%9.2f) 	// Creamos un cuadro de estadísticos descriptivos para la variable sexo
-
-table dpto, contents(n niv_edu_g mean niv_edu_g sd niv_edu_g min niv_edu_g max niv_edu_g) format(%9.2f) center row col // Vemos el nivel de educación promedio por departamento
-
-egen ing_ocu_pri	 	=rowtotal(i524a1 d529t i530a d536)						if ocu500==1 & !missing(ocu500)
-replace ing_ocu_pri 	=ing_ocu_pri/12
-egen ing_ocu_sec		=rowtotal(i538a1 d540t i541a d543)						if ocu500==1 & !missing(ocu500)
-replace ing_ocu_sec		=ing_ocu_sec/12
-egen ing_lab			=rowtotal(ing_ocu_pri ing_ocu_sec)  					if ocu500==1 & !missing(ocu500)
-replace ing_lab			=. 														if ing_lab==0 & ocu500==1
-egen ing_extra			=rowtotal(d544t) 										if ocu500==1 & !missing(ocu500)
-replace ing_extra		=ing_extra/12
-egen ing_total			=rowtotal(ing_lab ing_extra)			 				if ocu500==1 & !missing(ocu500)
-gen ing_total_anual		=ing_total*12
-
-replace ing_total = . if ing_total == 0
-bys sexo : sum ing_total							//Observamos brecha salarial entre hombres y mujeres
-
-table dpto, contents(n ing_total mean ing_total sd ing_total min ing_total max ing_total) format(%9.2f) center row col // Vemos el nivel de educación promedio por departamento
-
-table dpto sexo, contents(mean ing_total) format(%9.2f) 		// Vemos el salario promedio por departamento y sexo
-
-table dpto rural, contents(mean ing_total) format(%9.2f) 		// Vemos el salario promedio por departamento y area geográfica
-
-table rural sexo lengua, contents(mean ing_total) format(%9.2f) // Vemos el salario promedio según sexo y area en la que vive y lengua materna
-
-ttest ing_total if ocu500==1, by(sexo) 							// Realizamos test de medias para brecha x sexo
-ttest ing_total if ocu500==1, by(lengua)  						// Realizamos test de medias para brecha x lengua materna
-ttest ing_total if ocu500==1, by(rural) 					 	// Realizamos test de medias para brecha urbano - rural
-
-order dpto ubigeo conglome vivienda hogar codperso dominio
-sort dpto
-
-label data "Encuesta Nacional de Hogares (ENAHO) Módulos 3 y 5"	//agregamos etiqueta a la base
-describe, fullnames
+df_path = "/home/franco/Documents/Data/Enaho/2017/603-Modulo05/enaho01a-2017-500.dta"
+df2 = None
+with open(df_path, 'rb') as f:
+    df2 = pd.read_stata(f)
 
 
-*Guardando la base como spreadsheet
-outsheet using "lección2_guardada.xls", replace									//guardamos la base trabajada en esta lección en xls
-outsheet ubigeo ing_total sexo using "lección2_guardada2.xls", replace			//guardamos sólo las variables ubigeo, ingreso y sexo en xls
-outsheet using "lección2_guardada3.xls" if dpto==15, replace					//guardamos sólo las observacions de Lima
-outsheet using "lección2_guardada4.xls" in 1/7, replace							//guardamos sólo las observaciones del 1 al 7
+df2['id_persona'] = df.ubigeo + df.nconglome + df.vivienda + df.hogar + df.codperso  #Create identifier for each individual
+df2['id_persona'] = pd.Series(df2['id_persona'].map(lambda x: str(x)), index = df.index)
+df2 = df2[['id_persona', 'p203', 'p204', 'p301a', 'p207', 'p208a', 'i524a1', 'd529t', 'i530a', 'd536', 'i538a1', 'd540t', 'i541a', 'd543', 'd544t', 'ocu500']]
 
-export excel ubigeo ing_total sexo using "lección2_guardada5.xls" if dpto==15, firstrow(variables) replace		//guardamos sólo las variables ubigeo, ingreso y sexo en xls para Dpto= Lima
-export excel using "lección2_guardada6.xls" if dpto==15, firstrow(variables) sheet(selec_lima) replace	//guardamos sólo las observacions de Lima en la hoja selec_if de un libro
-export excel using "lección2_guardada6.xls" in 1/7, firstrow(variables) sheet(selec_7)				//guardamos sólo las observaciones del 1 al 7 en la hoja selec_in de un mismo libro
+result = pd.merge(df2, df, left_on='id_persona', right_on='id_persona')
+result = result.rename(columns = {'p301a': "niveduc", "p207_x": "sexo", "p208a": "edad", "p301a_x": "niveduc", "p300a": "lang"})
+list(result)
+
+df2.shape[0], df.shape[0], result.shape[0]
+
+result = result[result.id_persona.duplicated()==0]                                   #Drop all duplicated observations
+df2.shape[0], df.shape[0], result.shape[0]
+
+result.dtypes
 
 
-save 				"Base_de_DatosFinal", replace
+result.niveduc.value_counts()
+result.niveduc.value_counts(normalize=True)
 
-*Eliminamos Archivos
 
-erase				"Base_de_DatosFinal.dta"
-erase				"lección2_guardada.xls"
-erase				"lección2_guardada2.xls"
-erase				"lección2_guardada3.xls"
-erase				"lección2_guardada4.xls"
-erase				"lección2_guardada5.xls"
-erase				"lección2_guardada6.xls"
+#delimit;
+result['niveduc_n']	= result.niveduc.astype("category").cat.codes #Convert to numerical variable
+
+result['niveduc_n'][(result.niveduc_n == 0) | (result.niveduc_n == 1)| (result.niveduc_n == 2)| (result.niveduc_n == 3)] = 1
+result['niveduc_n'][(result.niveduc_n == 4)] = 2
+result['niveduc_n'][(result.niveduc_n == 5)] = 3
+result['niveduc_n'][(result.niveduc_n == 6) | (result.niveduc_n == 8)] = 4
+result['niveduc_n'][(result.niveduc_n == 7) | (result.niveduc_n == 9) | (result.niveduc_n == 10)] = 5
+
+result = result[(result['niveduc_n']!=11) &  (result['niveduc_n']!=-1)]
+result['niveduc_n'].value_counts()
+
+result['estrato_n']	= result.estrato.astype("category").cat.codes #Convert to numerical variable
+result['estrato_n'][(result['estrato_n'] <= 5)] = 0
+result['estrato_n'][(result['estrato_n'] == 6) | (result['estrato_n'] == 7)] = 1
+
+result.estrato_n.value_counts()
+
+temp = pd.get_dummies(result.niveduc_n, prefix='niv')
+result = pd.concat([result, temp], axis=1)
+
+list(result)
+result['ing_ocu_pri']	 	 =result[['i524a1', 'd529t', 'i530a', 'd536']].sum(1)
+result['ing_ocu_pri'] 	     =result['ing_ocu_pri']/12
+result['ing_ocu_sec']		 =result[['i538a1', 'd540t', 'i541a', 'd543']].sum(1)
+result['ing_ocu_sec']		 =result['ing_ocu_sec']/12
+result['ing_lab']			 =result['ing_ocu_pri'] + result['ing_ocu_sec']
+result['ing_lab'][result['ing_lab'] == 0.]       = np.nan
+result['ing_extra']			 =result['d544t']
+result['ing_extra']		     =result['ing_extra']/12
+result['ing_total']			 =result['ing_lab'] + result['ing_extra']
+result['ing_total_anual']	 =result['ing_total']*12
+
+
+result.ocu500.value_counts()
+result['ocu500_n'] = result.ocu500.astype("category").cat.codes #Convert to numerical variable
+ocupado_df = result[result['ocu500_n'] == 1]
+desocupado_df = result[(result['ocu500_n'] != 1) & (result['ocu500_n'] != 4)]
+
+np.nanmean(ocupado_df['ing_lab'][result.sexo == 'hombre'])
+np.nanmean(ocupado_df['ing_lab'][result.sexo == 'mujer'])
+
+np.nanmean(ocupado_df['ing_ocu_pri'][result.sexo == 'hombre'])
+np.nanmean(ocupado_df['ing_ocu_pri'][result.sexo == 'mujer'])
+
+np.nanmean(ocupado_df['ing_ocu_sec'][result.sexo == 'hombre'])
+np.nanmean(ocupado_df['ing_ocu_sec'][result.sexo == 'mujer'])
+
+np.nanmean(ocupado_df['ing_lab'][result.sexo == 'hombre'])
+np.nanmean(ocupado_df['ing_lab'][result.sexo == 'mujer'])
+
+list(ocupado_df)
+
+ocupado_df[['sexo', 'niveduc_n']].groupby(['sexo']).mean()
+
+ocupado_df[['ing_ocu_pri', 'ing_ocu_sec', 'ing_lab', 'ing_extra', 'ing_total', 'ing_total_anual', 'sexo', 'niveduc_n']].groupby(['sexo']).mean()
+ocupado_df[['ing_ocu_pri', 'ing_ocu_sec', 'ing_lab', 'ing_extra', 'ing_total', 'ing_total_anual', 'sexo', 'niveduc_n']].groupby(['sexo']).median()
+ocupado_df[['ing_ocu_pri', 'ing_ocu_sec', 'ing_lab', 'ing_extra', 'ing_total', 'ing_total_anual', 'sexo', 'niveduc_n']].groupby(['sexo']).sum()
+
+ocupado_df[['ing_ocu_pri', 'ing_ocu_sec', 'ing_lab', 'ing_extra', 'ing_total', 'ing_total_anual', 'sexo', 'niveduc_n']].groupby(['sexo', 'niveduc_n']).mean()
+ocupado_df[['ing_ocu_pri', 'ing_ocu_sec', 'ing_lab', 'ing_extra', 'ing_total', 'ing_total_anual', 'sexo', 'niveduc_n']].groupby(['sexo', 'niveduc_n']).median()
+ocupado_df[['ing_ocu_pri', 'ing_ocu_sec', 'ing_lab', 'ing_extra', 'ing_total', 'ing_total_anual', 'sexo', 'niveduc_n']].groupby(['sexo', 'niveduc_n']).sum()
+
+ocupado_df.estrato_n.value_counts()
+
+from scipy import stats
+
+#Creamos dataframes para utilizarlos en el t statistic
+ocu_h = ocupado_df[ocupado_df['sexo']=='hombre']
+ocu_m = ocupado_df[ocupado_df['sexo']=='mujer']
+
+ocu_c = ocupado_df[ocupado_df['lang']=='castellano']
+ocu_q = ocupado_df[ocupado_df['lang']=='quechua']
+
+ocu_r = ocupado_df[ocupado_df['estrato_n']==0]
+ocu_u = ocupado_df[ocupado_df['estrato_n']==1]
+
+
+stats.ttest_ind(ocu_h['ing_total'].dropna(), ocu_m['ing_total'].dropna()) #Rechazamos la hipotesis nula de que hombres y mujeres ganan igual
+stats.ttest_ind(ocu_c['ing_total'].dropna(), ocu_q['ing_total'].dropna()) #Rechazamos la hipotesis nula de que hombres y mujeres ganan igual
+stats.ttest_ind(ocu_u['ing_total'].dropna(), ocu_r['ing_total'].dropna()) #Rechazamos la hipotesis nula de que hombres y mujeres ganan igual
+
+
+ocupado_df.to_csv("/home/franco/Documents/GitHub/Python_4_DataScience/outputs/ocupados.csv")

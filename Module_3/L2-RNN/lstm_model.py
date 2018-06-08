@@ -239,9 +239,9 @@ def neural_net_rnn(x_data, y_data, n_a, learning_rate, num_epochs, batch_size):
         print("Parameters have been trained!")
 
         #Print Results:
-        (pd.Series(loss_list)).plot(style = 'b-')
-        (pd.Series(accuracy_list_T)).plot(style = 'm-',secondary_y = True)
-        (pd.Series(accuracy_list_0)).plot(style = 'g-',secondary_y = True).legend(['Time=T','Time=0','Loss'])
+#        (pd.Series(loss_list)).plot(style = 'b-')
+#        (pd.Series(accuracy_list_T)).plot(style = 'm-',secondary_y = True)
+#        (pd.Series(accuracy_list_0)).plot(style = 'g-',secondary_y = True).legend(['Time=T','Time=0','Loss'])
 
         return parameters, loss_list
 
