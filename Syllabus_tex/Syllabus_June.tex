@@ -9,16 +9,29 @@
 
 \usepackage{graphicx}
 \usepackage{float}
-\usepackage{hyperref}
 %\usepackage{biblatex}
 %\bibliographystyle{}
 %\bibliography{syl_references.bib}
 
+\usepackage{pdfpages}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\definecolor{brightmaroon}{rgb}{0.76, 0.13, 0.28}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=brightmaroon,
+    filecolor=brightmaroon,
+    urlcolor=brightmaroon,
+}
+\usepackage{fontawesome}
+\usepackage[T1]{fontenc}
+\usepackage{helvet}
 
-\title{Machine Learning with Python}
+
+\title{Python Aplicado a la Ciencia de Datos}
 
 
-\author{\href{http://users.nber.org/~callef/}{Franco Calle}}
+\author{\href{http://francocalle.github.io/}{Franco Calle}}
 
 \date{}
 
@@ -26,42 +39,42 @@
 
 \maketitle
 
+\section*{Resumen y Objetivos}
 
-\section*{Summary}
-Machine learning is an application of artificial intelligence that provides systems the ability to automatically learn and improve from experience. The tools of ML are increasingly adopted by academia and companies all over the world because of its predictive power in the era of big data.
+Python es un lenguaje de programación cuya versatilidad para el procesamiento de datos y capacidad para el análisis funcional lo hace cada vez más popular. Su popularidad ha crecido tanto en los últimos años que en el sector privado y la academia cada vez lo utilizan más para lograr distintos objetivos relacionados a la ciencia de datos como la limpieza y procesamiento de datos, automatización de procesos, hasta predicción y modelamiento del comportamiento humano.
 
-For instance, academia is using ML tools to predict behavioral patterns, estimate unbiased reduced form parameters, eliminate bias in data collection and to automate research processes, among other uses. Companies are also adopting AI technologies and therefore demand professionals with high knowledge in ML that could build predictive models of consumer behavior, store sales, stock prices, among others.
+El objetivo del curso es brindar al estudiante los fundamentos y lógica de programación en Python que sirvan como herramienta para abordar y resolver problemas que podrían ser aplicados en el sector privado y en la academia. Especificamente, al finalizar el curso, el estudiante podrá reconocer y aplicar de manera conjunta objetos como listas, dataframes, diccionarios, tuplas y funciones para resolver un problema de predicción y validarlo en la vida real.
 
-The economist of the 21st century must have a strong background in Machine Learning to exploit the most valuable resource in the world: Data\footnote{The Economist: https://www.economist.com/news/leaders/21721656-data-economy-demands-new-approach-antitrust-rules-worlds-most-valuable-resource}. Big windows of opportunities are frequently opened for professionals with a strong background in ML, and one should be prepared to cross them.
+\section*{Introducción}
 
-\section*{Objectives}
-
-The course aims to provide the necessary knowledge and tools of programming in python language. The student after the course will easily recognize and handle primary python objects such as lists, dictionaries, tuples, and functions.
-The student will comprehend diverse methods used in machine learning and know how these methods learn from the world to estimate more accurate predictions.
-The student will know how to build machine learning algorithms.
-
-\section*{Introduction}
-  
 \begin{itemize}
-\item[-] Why is it important to learn a programing language?
-\item[-] Learning curve and scope of programming languages (R, Stata, C+, Python)
-\item[-] What is Data Science? What is Machine Learning?
-\item[-] Why Python?
+\item[-] ¿Por qué es importane aprender un lenguaje de programación?
+\item[-] Curva de aprendizaje y alcance de distintos lenguajes de programación  (R, Stata, C+, Python)
+\item[-] ¿Qué es Data Science? ¿Qué es Machine Learning?
+\item[-] ¿Por qué Python?
 \end{itemize}
 
-\section*{First Module: Python Basics}
+\section*{Primer Módulo: Elementos Básicos de Python}
 
-\subsection*{First Lecture: Variables, expressions, and statements}
+\subsection*{Primera Clase: Variables, expresiones, y statements}
 \begin{itemize}
 \item[-]	Values, variable names, and keywords
 \item[-]	Operators, operands, expressions, the order of operations, string operations
-\item[-]	Asking the user for input
-\item[-]	Choosing mnemonic variable names
+\item[-]	Asking for inputs to the user
+\item[-]	Mnemonic variable names
 \end{itemize}
 
-\subsection*{Second Lecture: Conditional execution}
+\subsection*{Segunda Clase: Objetos de Python}
 \begin{itemize}
-\item[-]	Boolean expressions
+\item[-]	Lists
+\item[-]	Dictionaries
+\item[-]	Tuples
+\item[-]	Multiple assignments with dictionaries
+\end{itemize}
+
+\subsection*{Tercera Clase: Ejecución Condicional}
+\begin{itemize}
+\item[-]	Boolean Expressions
 \item[-]	Logical operators
 \item[-]	Conditional, alternative, and chained conditional executions
 \item[-]	Nested conditionals
@@ -69,57 +82,74 @@ The student will know how to build machine learning algorithms.
 \item[-]	Short-circuit evaluation of logical expressions
 \end{itemize}
 
-\subsection*{Third Lecture: Functions}
-\begin{itemize}
-\item[-]	Numpy module
-\item[-]	Pandas module
-\item[-]   Adding new functions
-\item[-]	Definitions and uses
-\item[-]	The flow of execution, arguments, and parameters
-\end{itemize}
-
-\subsection*{Fourth Lecture: Iteration}
+\subsection*{Cuarta Clase: Iteraciones}
 \begin{itemize}
 \item[-]	Updating variables
-\item[-]	while statement
 \item[-]	Definite loops using for
-\item[-]	Loop patterns
+\item[-]	Double, multiple and nested iteration
+\item[-]	While statement
+\item[-]	List comprehension
 \end{itemize}
 
-\subsection*{Fifth Lecture: Type of objects}
+\subsection*{Quinta Clase: Funciones}
 \begin{itemize}
-\item[-]	Lists
-\item[-]	Dictionaries
-\item[-]	Tuples
-\item[-]	Multiple assignments with dictionaries
+\item[-]	The flow of execution, arguments, and parameters
+\item[-]    Adding new functions
+\item[-]	Definitions and uses
+\item[-]	Annonimous functions Lambda
+\item[-]	Mapping and filtering
+\item[-]	Numpy module
+\item[-]	Pandas module
+\end{itemize}
+
+\subsection*{Sexta Clase: DataFrames}
+\begin{itemize}
+\item[-]	Using and creating Dataframes
+\item[-]	Replace and rename columns
+\item[-]	Slicing Dataframes
+\item[-]	Merge, Append
+\item[-]	Import, Export
+\end{itemize}
+
+\section*{Segundo Módulo: El problema de predicción y el uso de Machine Learning}
+
+\subsection*{Primera Clase: Predicción y Métricas de Performance}
+\begin{itemize}
+\item[-]	The Prediction Problem
+\item[-]	Confusion Matrix
+\item[-]	Accuracy, Precision, Recall
+\item[-]	The receiving operations curve and Area Under the Curve
 
 \end{itemize}
 
-\section*{Second Module: Machine Learning and Artificial Intelligence}
-
-\subsection*{First Lecture: Machine Learning Methods using scikit learn}
+\subsection*{Segunda Clase: Métodos de Machine Learning para Clasificación}
 \begin{itemize}
+\item[-]	Logistic Regression
 \item[-]	K-Nearest Neighbors Classification
 \item[-]	Supervised Machine Learning
-\item[-]	Least Squares
-\item[-]	Ridge, Lasso, and Polynomial Regression
-\item[-]	Logistic Regression
-\item[-]	Support Vector Machines
 \item[-]	Multi – Class Classification
-\item[-]	Cross – Validation
 \item[-]	Decision Trees
+\item[-]	Random Forests
 \end{itemize}
 
-\subsection*{Second Lecture: Deep Learning and Neural Networks (Intro)}
+\subsection*{Tercera Clase: Métodos de Machine Learning para Regressión}
 \begin{itemize}
-\item[-]	Neural Networks
-\item[-]	Deep Learning
+\item[-]	Least Squares
+\item[-]	Ridge
+\item[-]	Polynomial Regression
+\item[-]	R-squared, MSE
 \end{itemize}
 
-\newpage
+\subsection*{Cuarta Clase: Validación Cruzada y Composición del Modelo}
+\begin{itemize}
+\item[-]	Cross Validation
+\item[-]	Grid Search
+\item[-]	Contribución de la data al modelo
+\item[-]	Contribución de las variables al modelo
+\end{itemize}
 
-%\printbibliography
+\section*{Proyecto Final}
 
-
+El proyecto final requiere utilizar todos los conocimientos aprendidos en el Módulo 1 y 2 del curso para resolver un problema de predicción aplicado a las ciencias sociales utilizando data del INEI.
 
 \end{document}
