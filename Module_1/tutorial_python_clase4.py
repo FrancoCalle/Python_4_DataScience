@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed May 13 19:25:08 2020
 
-@author: Franco
+Python para Economistas: Tercera Clase
+Autor: Franco Calle
+
+- Updating variables
+- Definite loops using for
+- Double, multiple and nested iteration
+- While statement
+- List comprehension
+
 """
 
 
@@ -13,7 +20,17 @@ import random
 import matplotlib.pyplot as plt
 
 
-# Iterables:
+# Actualizando variables:
+
+ii = 0
+print(ii)
+ii += 1
+print(ii)
+ii -= 1
+print(ii)
+
+
+# Loops usando for:
 
 for ii in range(10):
     print(ii)
@@ -22,17 +39,25 @@ for ii in range(10):
 for ii in range(1,501):
     print("Numero: " + str(ii))
 
+# Se puede iterar a traves de listas
+numberList = [1,2,3,4,5]
+for ii in numberList:
+    print(ii)
 
+# Se puede iterar a traves de tuplas
+numberTuple = (1,2,3,4,5)
+for ii in numberTuple:
+    print(ii)
+
+# Podemos hacer update incluyendo elementos a una lista:
 listaDeNumeros = []
 for ii in range(1,501):
     listaDeNumeros.append("Numero: " + str(ii))
 
-
-#List comprehension
+# Hacemos lo mismo con list comprehension:
 listaDeNumeros = ["Numero: " + str(ii) for ii in range(1, 501)]
 
-
-#Iterable mas condicionales:
+# Iterable mas condicionales:
 nuevaListaDeNumeros = []
 
 for ii in range(1,50):
@@ -61,41 +86,31 @@ for ii in codigoTrabajador:
     if ii%2 == 0 or ii%3 == 0:
         codigoTrabajadorMultiplos.append("Trabajador: "+ str(ii))
 
-# While statements:
-jj = 0
-while jj <= 500:
-    jj = jj + 1
-    time.sleep(0.3)
-    if jj%100 == 0:
-        print("Estamos en el numero: " + str(jj))
 
-# Iteration in parallel:
-randomNumberList= [random.random() for i in range(1000)]
-plt.hist(randomNumberList, density=True)
-
-randomNumberList= [random.uniform(5,3) for i in range(1000)]
-plt.hist(randomNumberList, density=True)
+# Nested iteration:
+zeroArray = np.zeros((5,5))
+for ii in range(zeroArray.shape[0]):
+    for jj in range(zeroArray.shape[1]):
+        zeroArray[ii,jj] = 1
 
 
-randomNumberList= [random.normalvariate(0.5, 1) for i in range(1000)]
-plt.hist(randomNumberList, density=True)
-randomNumberList= [random.normalvariate(0.5, 2) for i in range(1000)]
-plt.hist(randomNumberList, density=True)
-plt.plot()
 
+
+# Double iteration:
 
 workersAge  = [random.randint(18, 50) for i in range(1000)]
 workersName = ["Trabajador: " + str(i) for i in range(1,1001)]
 workerRandomNumber = [random.uniform(0, 1) for i in range(1000)]
 
+
+for randomNumber, name in zip(workerRandomNumber, workersName):
+    print(name, '|', round(randomNumber,4))
+
+
 #Grupo 1: Peru [< 0.10]
 #Grupo 2: Chile [0.10 - 0.30]
 #Grupo 3: Argentina [0.30 - 0.60]
 #Grupo 4: Colombia  [0.60 - 1]
-
-for randomNumber, name in zip(workerRandomNumber, workersName):
-    print(name, round(randomNumber,4))
-
 
 groupPeru = []
 groupChile = []
@@ -113,7 +128,7 @@ for randomNumber, name in zip(workerRandomNumber, workersName):
         groupColombia.append(name)
 
 
-
+# Using list comprehension and functions
 
 def groupAsignment(seed):
     if seed < 0.10:
@@ -134,17 +149,25 @@ groupArgentina = [name for seed, name in zip(workerRandomNumber, workersName) if
 groupColombia = [name for seed, name in zip(workerRandomNumber, workersName) if groupAsignment(seed) == "Colombia"]
 
 
+# While statements:
+
+jj = 0
+while jj <= 500:
+    jj = jj + 1
+    time.sleep(0.3)
+    if jj%100 == 0:
+        print("Estamos en el numero: " + str(jj))
+
+# Iteration in parallel:
+randomNumberList= [random.random() for i in range(1000)]
+plt.hist(randomNumberList, density=True)
+
+randomNumberList= [random.uniform(5,3) for i in range(1000)]
+plt.hist(randomNumberList, density=True)
 
 
-
-
-
-#for fileName in fileNameList:
-#    dataOperarios = pd.read_csv(fileName)
-#    dataOperariosNoDup = dataOperarios.drop_duplicates(subset=["Codigo"]) # dataOperarios.drop_duplicates(subset=["Codigo"], inplace=True)
-#    dataOperariosNoDup["Identifier"] = dataOperariosNoDup["Codigo"] % 2
-#    dataOperariosNoDupFinal = dataOperariosNoDup.loc[dataOperariosNoDup["Identifier"]==0,:]
-
-
-
-    
+randomNumberList= [random.normalvariate(0.5, 1) for i in range(1000)]
+plt.hist(randomNumberList, density=True)
+randomNumberList= [random.normalvariate(0.5, 2) for i in range(1000)]
+plt.hist(randomNumberList, density=True)
+plt.plot()

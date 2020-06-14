@@ -15,6 +15,8 @@ Autor: Franco Calle
 
 #1. Expresiones Booleanas y Operadores logicos:
 
+import timeit
+
 #In programming you often need to know if an expression is True or False.
 #When you compare two values, the expression is evaluated and Python returns the Boolean answer:
 
@@ -94,3 +96,21 @@ else:
         print(x, " is a positive number")
     else:
         print(x, " is 0")
+
+# Guardians: capturando expresiones usando try y except:
+
+try:
+  print(xsdasdw)
+except:
+  print("An exception occurred")
+
+
+# Short circuit:
+
+if True and False:
+    print('hello world')
+
+
+
+if True and True:
+    print('hello world')
