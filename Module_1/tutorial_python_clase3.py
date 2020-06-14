@@ -1,150 +1,96 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed May 13 19:25:08 2020
 
-@author: Franco
+Python para Economistas: Tercera Clase
+Autor: Franco Calle
+
+- Boolean Expressions
+- Logical operators
+- Conditional, alternative, and chained conditional executions
+- Nested conditionals
+- Guardians: catching expressions using try and except
+- Short-circuit evaluation of logical expressions
+
 """
 
+#1. Expresiones Booleanas y Operadores logicos:
 
-import numpy as np
-import pandas as pd
-import time
-import random
-import matplotlib.pyplot as plt
+#In programming you often need to know if an expression is True or False.
+#When you compare two values, the expression is evaluated and Python returns the Boolean answer:
 
+#Comparacion
+print(10 > 9)
+print(10 >= 9)
+print(10 == 9)
+print(10 <= 9)
+print(10 == 10.)
 
-# Iterables:
+#logical
+print(not True)
+print(1<5 or 1>3)
+print(1<5 and 1>3)
+print(not(1<5 and 1>3))
 
-for ii in range(10):
-    print(ii)
+#Identidad
+print(10 is 10.)
+print(10 is not 10.)
 
+#Membresia
+print(10 in [9, 10])
+print(10 not in [9, 10])
 
-for ii in range(1,501):
-    print("Numero: " + str(ii))
+#Evaluar el tipo de elemento
+print(isinstance(10, int))
+print(isinstance("10", str))
+print(isinstance(10., float))
+print(isinstance([], list))
+print(isinstance({}, dict))
+print(isinstance((1,), tuple))
 
+#Evaluar si un elemento es True o False
+bool()
+bool([])
+bool({})
+bool(False)
+bool("")
+bool(0)
+bool(1)
+bool(None)
+bool("Hello")
+bool(15)
 
-listaDeNumeros = []
-for ii in range(1,501):
-    listaDeNumeros.append("Numero: " + str(ii))
+#2. Conditional, alternative, and chained conditional executions
 
+x = 3
+y = 5
 
-#List comprehension
-listaDeNumeros = ["Numero: " + str(ii) for ii in range(1, 501)]
+# Condicionales
+if x < y:
+    print("x es menor que y")
 
+# Alternativos
+if x < y:
+    print("x es menor que y")
+else:
+    print("x es mayor que y")
 
-#Iterable mas condicionales:
-nuevaListaDeNumeros = []
+# Condiciones en cadena
+if x < y:
+    print("x es menor que y")
+elif x > y:
+    print("x es mayor que y")
+else:
+    print("x e y deberian ser iguales")
 
-for ii in range(1,50):
-    if ii <= 25:
-        nuevaListaDeNumeros.append("Trabajador: " + str(ii))
-    if ii > 25:
-        nuevaListaDeNumeros.append("Trabajadora: " + str(ii))
+#3. Condicionales anidados
 
-
-codigoTrabajador = list(range(1,101))
-codigoTrabajadorPar = []
-
-for ii in codigoTrabajador:
-    if ii%2 == 0:
-        codigoTrabajadorPar.append("Trabajador: "+ str(ii))
-
-
-codigoTrabajadorMultiploSeis = []
-for ii in codigoTrabajador:
-    if ii%2 == 0 and ii%3 == 0:
-        codigoTrabajadorMultiploSeis.append("Trabajador: "+ str(ii))
-
-
-codigoTrabajadorMultiplos = []
-for ii in codigoTrabajador:
-    if ii%2 == 0 or ii%3 == 0:
-        codigoTrabajadorMultiplos.append("Trabajador: "+ str(ii))
-
-# While statements:
-jj = 0
-while jj <= 500:
-    jj = jj + 1
-    time.sleep(0.3)
-    if jj%100 == 0:
-        print("Estamos en el numero: " + str(jj))
-
-# Iteration in parallel:
-randomNumberList= [random.random() for i in range(1000)]
-plt.hist(randomNumberList, density=True)
-
-randomNumberList= [random.uniform(5,3) for i in range(1000)]
-plt.hist(randomNumberList, density=True)
-
-
-randomNumberList= [random.normalvariate(0.5, 1) for i in range(1000)]
-plt.hist(randomNumberList, density=True)
-randomNumberList= [random.normalvariate(0.5, 2) for i in range(1000)]
-plt.hist(randomNumberList, density=True)
-plt.plot()
-
-
-workersAge  = [random.randint(18, 50) for i in range(1000)]
-workersName = ["Trabajador: " + str(i) for i in range(1,1001)]
-workerRandomNumber = [random.uniform(0, 1) for i in range(1000)]
-
-#Grupo 1: Peru [< 0.10]
-#Grupo 2: Chile [0.10 - 0.30]
-#Grupo 3: Argentina [0.30 - 0.60]
-#Grupo 4: Colombia  [0.60 - 1]
-
-for randomNumber, name in zip(workerRandomNumber, workersName):
-    print(name, round(randomNumber,4))
-
-
-groupPeru = []
-groupChile = []
-groupArgentina = []
-groupColombia = []
-
-for randomNumber, name in zip(workerRandomNumber, workersName):
-    if randomNumber < 0.10:
-        groupPeru.append(name)
-    elif randomNumber >= 0.10 and randomNumber < 0.30:
-        groupChile.append(name)
-    elif randomNumber >= 0.30 and randomNumber < 0.60:
-        groupArgentina.append(name)
+# nested if-else statement
+x = -10
+if x < 0:
+    xx = x**2
+    print("Elevamos ",  x, " al cuadrado y el resultado es ", xx)
+else:
+    if x > 0:
+        print(x, " is a positive number")
     else:
-        groupColombia.append(name)
-
-
-
-
-def groupAsignment(seed):
-    if seed < 0.10:
-        groupName = "Peru"
-    elif seed >= 0.10 and seed < 0.30:
-        groupName = "Chile"
-    elif seed >= 0.30 and seed < 0.60:
-        groupName = "Argentina"
-    else:
-        groupName = "Colombia"
-
-    return groupName
-
-
-groupPeru = [name for seed, name in zip(workerRandomNumber, workersName) if groupAsignment(seed) == "Peru"]
-groupChile = [name for seed, name in zip(workerRandomNumber, workersName) if groupAsignment(seed) == "Chile"]
-groupArgentina = [name for seed, name in zip(workerRandomNumber, workersName) if groupAsignment(seed) == "Argentina"]
-groupColombia = [name for seed, name in zip(workerRandomNumber, workersName) if groupAsignment(seed) == "Colombia"]
-
-
-
-
-
-
-
-#for fileName in fileNameList:
-#    dataOperarios = pd.read_csv(fileName)
-#    dataOperariosNoDup = dataOperarios.drop_duplicates(subset=["Codigo"]) # dataOperarios.drop_duplicates(subset=["Codigo"], inplace=True)
-#    dataOperariosNoDup["Identifier"] = dataOperariosNoDup["Codigo"] % 2
-#    dataOperariosNoDupFinal = dataOperariosNoDup.loc[dataOperariosNoDup["Identifier"]==0,:]
-
-
-
-    
+        print(x, " is 0")
