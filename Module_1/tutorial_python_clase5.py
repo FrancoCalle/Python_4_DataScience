@@ -1,8 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed May 13 19:25:08 2020
 
-@author: Franco
+Python para Economistas: Quinta Clase
+Autor: Franco Calle
+
+- The flow of execution, arguments, and parameters
+- Adding new functions
+- Definitions and uses
+- Annonimous functions Lambda
+- Mapping and filtering
+- Numpy module
+
 """
 
 
@@ -13,138 +21,120 @@ import random
 import matplotlib.pyplot as plt
 
 
-# Iterables:
 
-for ii in range(10):
-    print(ii)
+# Creando una funcion
 
+#Ejemplo 1
 
-for ii in range(1,501):
-    print("Numero: " + str(ii))
+def miPrimeraSuma(a,b):
+    return a+b
 
+miPrimeraFuncion(1,2)
+suma = miPrimeraFuncion(1,2)
+print(suma)
 
-listaDeNumeros = []
-for ii in range(1,501):
-    listaDeNumeros.append("Numero: " + str(ii))
+#Ejemplo 2
 
-
-#List comprehension
-listaDeNumeros = ["Numero: " + str(ii) for ii in range(1, 501)]
-
-
-#Iterable mas condicionales:
-nuevaListaDeNumeros = []
-
-for ii in range(1,50):
-    if ii <= 25:
-        nuevaListaDeNumeros.append("Trabajador: " + str(ii))
-    if ii > 25:
-        nuevaListaDeNumeros.append("Trabajadora: " + str(ii))
-
-
-codigoTrabajador = list(range(1,101))
-codigoTrabajadorPar = []
-
-for ii in codigoTrabajador:
-    if ii%2 == 0:
-        codigoTrabajadorPar.append("Trabajador: "+ str(ii))
-
-
-codigoTrabajadorMultiploSeis = []
-for ii in codigoTrabajador:
-    if ii%2 == 0 and ii%3 == 0:
-        codigoTrabajadorMultiploSeis.append("Trabajador: "+ str(ii))
-
-
-codigoTrabajadorMultiplos = []
-for ii in codigoTrabajador:
-    if ii%2 == 0 or ii%3 == 0:
-        codigoTrabajadorMultiplos.append("Trabajador: "+ str(ii))
-
-# While statements:
-jj = 0
-while jj <= 500:
-    jj = jj + 1
-    time.sleep(0.3)
-    if jj%100 == 0:
-        print("Estamos en el numero: " + str(jj))
-
-# Iteration in parallel:
-randomNumberList= [random.random() for i in range(1000)]
-plt.hist(randomNumberList, density=True)
-
-randomNumberList= [random.uniform(5,3) for i in range(1000)]
-plt.hist(randomNumberList, density=True)
-
-
-randomNumberList= [random.normalvariate(0.5, 1) for i in range(1000)]
-plt.hist(randomNumberList, density=True)
-randomNumberList= [random.normalvariate(0.5, 2) for i in range(1000)]
-plt.hist(randomNumberList, density=True)
-plt.plot()
-
-
-workersAge  = [random.randint(18, 50) for i in range(1000)]
-workersName = ["Trabajador: " + str(i) for i in range(1,1001)]
-workerRandomNumber = [random.uniform(0, 1) for i in range(1000)]
-
-#Grupo 1: Peru [< 0.10]
-#Grupo 2: Chile [0.10 - 0.30]
-#Grupo 3: Argentina [0.30 - 0.60]
-#Grupo 4: Colombia  [0.60 - 1]
-
-for randomNumber, name in zip(workerRandomNumber, workersName):
-    print(name, round(randomNumber,4))
-
-
-groupPeru = []
-groupChile = []
-groupArgentina = []
-groupColombia = []
-
-for randomNumber, name in zip(workerRandomNumber, workersName):
-    if randomNumber < 0.10:
-        groupPeru.append(name)
-    elif randomNumber >= 0.10 and randomNumber < 0.30:
-        groupChile.append(name)
-    elif randomNumber >= 0.30 and randomNumber < 0.60:
-        groupArgentina.append(name)
+def miSegundaSuma(a=None,b=None):
+    if a != None and b != None:
+        return a+b
+    elif a == None or b != None:
+        return b
+    elif a != None or b == None:
+            return a
     else:
-        groupColombia.append(name)
+        return None
 
+miSegundaSuma(None,None)
 
+# Funciones anonimas usando lambdas
+suma = lambda x, y: x + y
+suma(1,2)
 
+resta = lambda x, y: x - y
+resta(1,2)
 
-def groupAsignment(seed):
-    if seed < 0.10:
-        groupName = "Peru"
-    elif seed >= 0.10 and seed < 0.30:
-        groupName = "Chile"
-    elif seed >= 0.30 and seed < 0.60:
-        groupName = "Argentina"
+# Mapping a function over lists:
+
+dataX = [3, 4 , 6, 5, 10, 15]
+
+dataY = [5, 7 , 0, 8, 2, 4]
+
+map(suma, dataX, dataY)
+
+list(map(suma, dataX, dataY))
+list(map(resta, dataX, dataY))
+
+list(map(lambda x, y: x + y, dataX, dataY))
+list(map(lambda x, y: x - y, dataX, dataY))
+
+# Filtrando una list:
+alphabets = ['a', 'b', 'c', 'e', 'i', 'j', 'u']
+
+# Funcion que filtra vocales:
+def filtraVocales(letra):
+    vocales = ['a', 'e', 'i', 'o', 'u']
+    if(letra in vocales):
+        return True
     else:
-        groupName = "Colombia"
+        return False
 
-    return groupName
+filteredVowels = filter(filtraVocales, alphabets)
+list(filteredVowels)
+
+filteredVowels = list(filter(lambda x: x in ['a', 'e', 'i', 'o', 'u'], alphabets))
+
+# Numpy module
+
+import numpy as np
+
+miMatrix = np.ones((5,5))
+miMatrix = np.ones((5,5,5))
+miMatrix = np.zeros((5,5))
+miMatrix = np.random.rand(5,5)
+print(miMatrix)
+
+# Numpy Arrays has multiple methods included
+myArray = np.array([[1, 2],[1, 2]])
+myArray.sum(0)
+myArray.sum(1)
+myArray.mean(1)
+myArray.max(1)
+myArray.min(1)
+myArray.max(1)
+myArray.std(1)
+myArray.transpose()
 
 
-groupPeru = [name for seed, name in zip(workerRandomNumber, workersName) if groupAsignment(seed) == "Peru"]
-groupChile = [name for seed, name in zip(workerRandomNumber, workersName) if groupAsignment(seed) == "Chile"]
-groupArgentina = [name for seed, name in zip(workerRandomNumber, workersName) if groupAsignment(seed) == "Argentina"]
-groupColombia = [name for seed, name in zip(workerRandomNumber, workersName) if groupAsignment(seed) == "Colombia"]
+for row in miMatrix:
+    print(row)
+
+for col in miMatrix.transpose():
+    print(col)
+
+#Variable aleatoria normalmente distribuida:
+
+xi = np.random.normal(1,.5)  # Variable aleatoria con media 1 y variancia 5
+X = np.random.normal(1,.5, 10000)  # Mil ocurrencias:
+
+Xbar = X.mean()
+Sigma2 = sum((Xbar-X)**2)/X.shape[0]
+Sigma = np.sqrt(Sigma2)
+
+plt.hist(X)
+
+#Variable aleatoria que proviene de una binomial:
+X = np.random.binomial(100, 0.2, 100000)  # Variable aleatoria con media 1 y variancia 5
+plt.hist(X)
+(X>=30).mean() # Probabilidad de que la moneda caiga cara 30 veces de las 100
 
 
+# Cual es la probabilidad que hayan dos terremotos dos dias seguidos en Peru
+T = np.random.binomial(1, 0.02, 1000000)  # Variable aleatoria con media 1 y variancia 5
 
+ii = 0
+for dd in range(1,1000000):
+    if T[dd] == 1 and T[dd-1] == 1:
+        ii += 1
 
-
-
-
-#for fileName in fileNameList:
-#    dataOperarios = pd.read_csv(fileName)
-#    dataOperariosNoDup = dataOperarios.drop_duplicates(subset=["Codigo"]) # dataOperarios.drop_duplicates(subset=["Codigo"], inplace=True)
-#    dataOperariosNoDup["Identifier"] = dataOperariosNoDup["Codigo"] % 2
-#    dataOperariosNoDupFinal = dataOperariosNoDup.loc[dataOperariosNoDup["Identifier"]==0,:]
-
-
-
-    
+print(str(ii), 'veces en', str(round(1000000/365)), "Anhos")
