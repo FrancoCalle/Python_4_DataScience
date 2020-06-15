@@ -1,150 +1,96 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed May 13 19:25:08 2020
 
-@author: Franco
+Python para Economistas: Sexta Clase
+Autor: Franco Calle
+
+- Pandas Module
+- Using and creating Dataframes
+- Replace and rename columns
+- Slicing Dataframes
+- Merge, Append
+- Import, Export
+
 """
-
 
 import numpy as np
 import pandas as pd
-import time
 import random
 import matplotlib.pyplot as plt
 
 
-# Iterables:
+#Creating series:
+s = pd.Series(np.random.randn(100))
+s1 = pd.Series(np.random.randint(1, 100, 100))
+s2 = pd.Series(np.random.normal(0,1,100))
+s3 = pd.Series(np.random.uniform(0,1,100))
+s4 = pd.Series(np.random.binomial(1,.3,100))
 
-for ii in range(10):
-    print(ii)
+#Creating Dataframes:
+df = pd.DataFrame({"Random":s, "RandInt":s1, "Normal":s2, "Uniform":s3, "Binomial":s4})
 
+print(df.head())
 
-for ii in range(1,501):
-    print("Numero: " + str(ii))
+# Llamar una columna:
+df['Uniform']
 
+# Convocar multiples columnas:
+df[['Uniform', 'Normal', 'Binomial']]
 
-listaDeNumeros = []
-for ii in range(1,501):
-    listaDeNumeros.append("Numero: " + str(ii))
-
-
-#List comprehension
-listaDeNumeros = ["Numero: " + str(ii) for ii in range(1, 501)]
-
-
-#Iterable mas condicionales:
-nuevaListaDeNumeros = []
-
-for ii in range(1,50):
-    if ii <= 25:
-        nuevaListaDeNumeros.append("Trabajador: " + str(ii))
-    if ii > 25:
-        nuevaListaDeNumeros.append("Trabajadora: " + str(ii))
+# Insertamos lista con todos los nombres de columna que queremos utilizar
+columnList = ['Uniform', 'Normal', 'Binomial']
+df2 = df[columnList]
 
 
-codigoTrabajador = list(range(1,101))
-codigoTrabajadorPar = []
+# Reemplazando y renombrando columnas
+df.columns
 
-for ii in codigoTrabajador:
-    if ii%2 == 0:
-        codigoTrabajadorPar.append("Trabajador: "+ str(ii))
+df = df.rename(columns={'Random': 'Random Variable', 'RandInt': 'Random Integer'})
 
-
-codigoTrabajadorMultiploSeis = []
-for ii in codigoTrabajador:
-    if ii%2 == 0 and ii%3 == 0:
-        codigoTrabajadorMultiploSeis.append("Trabajador: "+ str(ii))
+df.columns
 
 
-codigoTrabajadorMultiplos = []
-for ii in codigoTrabajador:
-    if ii%2 == 0 or ii%3 == 0:
-        codigoTrabajadorMultiplos.append("Trabajador: "+ str(ii))
+# Slicing:
 
-# While statements:
-jj = 0
-while jj <= 500:
-    jj = jj + 1
-    time.sleep(0.3)
-    if jj%100 == 0:
-        print("Estamos en el numero: " + str(jj))
+# Si queremos solo las filas que tienen valores para RandInt mayor a 30
+df3 = df.loc[df['Random Integer'] > 30, :]
+print('Nuestra base inicial tiene',df.shape[0], 'observaciones y la base final tiene', df3.shape[0])
 
-# Iteration in parallel:
-randomNumberList= [random.random() for i in range(1000)]
-plt.hist(randomNumberList, density=True)
+# Si queremos agregar mas condicionales
+df4 = df.loc[(df['Random Integer'] > 30) & (df['Binomial'] == 1), :]
+print('Nuestra base inicial tiene',df.shape[0], 'observaciones y la base final tiene', df4.shape[0])
 
-randomNumberList= [random.uniform(5,3) for i in range(1000)]
-plt.hist(randomNumberList, density=True)
+# Si queremos las condiciones anteriores pero solo necesitamos una variable especifica:
+df5 = df.loc[(df['Random Integer'] > 30) & (df['Binomial'] == 1), ['Normal', 'Uniform']]
 
+#Merging:
+dfNew = pd.DataFrame({'Integers': range(100), 'Name': ['Worker Number ' + str(ii) for ii in range(100)]})
 
-randomNumberList= [random.normalvariate(0.5, 1) for i in range(1000)]
-plt.hist(randomNumberList, density=True)
-randomNumberList= [random.normalvariate(0.5, 2) for i in range(1000)]
-plt.hist(randomNumberList, density=True)
-plt.plot()
+df['Random Integer'].value_counts()
 
+dfMerged1 = pd.merge(df,dfNew, left_on='Random Integer', right_on = 'Integers', how= 'inner', indicator=True)
+dfMerged2 = pd.merge(df,dfNew, left_on='Random Integer', right_on = 'Integers', how= 'right', indicator=True)
+dfMerged3 = pd.merge(df,dfNew, left_on='Random Integer', right_on = 'Integers', how= 'left', indicator=True)
 
-workersAge  = [random.randint(18, 50) for i in range(1000)]
-workersName = ["Trabajador: " + str(i) for i in range(1,1001)]
-workerRandomNumber = [random.uniform(0, 1) for i in range(1000)]
+dfMerged3['_merge'].value_counts()
 
-#Grupo 1: Peru [< 0.10]
-#Grupo 2: Chile [0.10 - 0.30]
-#Grupo 3: Argentina [0.30 - 0.60]
-#Grupo 4: Colombia  [0.60 - 1]
+# Drop a variable:
+dfMerged3.drop(columns=['_merge'], inplace = True)
 
-for randomNumber, name in zip(workerRandomNumber, workersName):
-    print(name, round(randomNumber,4))
+dfMergedCopy = dfMerged3.copy()
 
+# Append a dataframe
+dfAppend = dfMerged3.append(dfMergedCopy)
 
-groupPeru = []
-groupChile = []
-groupArgentina = []
-groupColombia = []
+# Query un Dataframe:
 
-for randomNumber, name in zip(workerRandomNumber, workersName):
-    if randomNumber < 0.10:
-        groupPeru.append(name)
-    elif randomNumber >= 0.10 and randomNumber < 0.30:
-        groupChile.append(name)
-    elif randomNumber >= 0.30 and randomNumber < 0.60:
-        groupArgentina.append(name)
-    else:
-        groupColombia.append(name)
+print(dfAppend.columns)
 
+q = ('(Binomial == %s) ' '& (Normal <= %s) ' '& (Uniform >= %s)') % (1,1,.5)
 
+print(q)
 
+reportCases = dfAppend.query(q)
+print(reportCases)
 
-def groupAsignment(seed):
-    if seed < 0.10:
-        groupName = "Peru"
-    elif seed >= 0.10 and seed < 0.30:
-        groupName = "Chile"
-    elif seed >= 0.30 and seed < 0.60:
-        groupName = "Argentina"
-    else:
-        groupName = "Colombia"
-
-    return groupName
-
-
-groupPeru = [name for seed, name in zip(workerRandomNumber, workersName) if groupAsignment(seed) == "Peru"]
-groupChile = [name for seed, name in zip(workerRandomNumber, workersName) if groupAsignment(seed) == "Chile"]
-groupArgentina = [name for seed, name in zip(workerRandomNumber, workersName) if groupAsignment(seed) == "Argentina"]
-groupColombia = [name for seed, name in zip(workerRandomNumber, workersName) if groupAsignment(seed) == "Colombia"]
-
-
-
-
-
-
-
-#for fileName in fileNameList:
-#    dataOperarios = pd.read_csv(fileName)
-#    dataOperariosNoDup = dataOperarios.drop_duplicates(subset=["Codigo"]) # dataOperarios.drop_duplicates(subset=["Codigo"], inplace=True)
-#    dataOperariosNoDup["Identifier"] = dataOperariosNoDup["Codigo"] % 2
-#    dataOperariosNoDupFinal = dataOperariosNoDup.loc[dataOperariosNoDup["Identifier"]==0,:]
-
-
-
-    
+# Cargar data:
