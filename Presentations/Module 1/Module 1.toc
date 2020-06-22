@@ -1,5 +1,5 @@
-\select@language {spanish}
-\select@language {spanish}
-\beamer@sectionintoc {1}{Introducci\IeC {\'o}n}{2}{0}{1}
+\babel@toc {spanish}{}
+\babel@toc {spanish}{}
+\beamer@sectionintoc {1}{Introducción}{2}{0}{1}
 \beamer@sectionintoc {2}{Objetivos}{4}{0}{2}
 \beamer@sectionintoc {3}{Ejemplo}{5}{0}{3}
