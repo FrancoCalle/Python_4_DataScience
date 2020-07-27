@@ -3,8 +3,6 @@
 Cuarta Clase: Validación Cruzada y Composición del Modelo
 - Cross Validation
 - Grid Search
-- Contribución de la data al modelo
-- Contribución de las variables al modelo
 
 """
 import copy
@@ -132,7 +130,6 @@ AUC_LevelsList= []
 for clf in modelList: AUC_LevelsList.append(getCrossValidation(X,Y,clf))
 
 AUC_Levels = pd.concat(AUC_LevelsList)
-
 
 
 plt.figure(figsize=(10,6))
