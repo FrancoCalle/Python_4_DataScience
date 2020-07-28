@@ -2,7 +2,6 @@
 
 Segunda Clase: Métodos de Machine Learning para Clasificación
 - Train and test sample
-- Supervised Machine Learning
 - Logistic Regression
 - K-Nearest Neighbors Classification
 - Decision Trees
@@ -94,10 +93,6 @@ plt.show()
 clf = RandomForestClassifier(max_depth=2, random_state=0)
 clf.fit(X,Y)
 rfcPredictionScore = clf.predict_proba(X)[:,1]
-
-
-
-
 
 
 # Compare Area Under the Curve for All Models and select the best one:
