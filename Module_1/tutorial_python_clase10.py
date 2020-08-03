@@ -3,6 +3,8 @@
 Cuarta Clase: Validación Cruzada y Composición del Modelo
 - Cross Validation
 - Grid Search
+- Contribucion de la data al Modelo
+- Contribucion de las variables al Modelo
 
 """
 import copy
